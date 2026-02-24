@@ -1,5 +1,5 @@
 exclude_paths:
-  #- .github/
+  # - .github/
   - changelogs/
   - tests/
   - meta/

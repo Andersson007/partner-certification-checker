@@ -1,7 +1,7 @@
 ---
 # This workflow runs the calling workflow from the main branch
 # in this repository for testing purposes.
-name: [main] Run collection certification checks
+name: (main) Run collection certification checks
 
 on:
   pull_request:

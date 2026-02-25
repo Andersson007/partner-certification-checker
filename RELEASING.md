@@ -23,7 +23,7 @@ For example, when bumping the `ansible-core` version from `2.16` to `2.17`, crea
    1. Get the commit SHA for the tag: `git rev-parse v1.1.0`
    2. Move the existing local `v1` tag to the new commit SHA: `git tag -f v1 <commit-sha-of-v1.1.0>`
    3. Force push the tag to GitHub: `git push upstream -f v1`
-5. Update the release part in the [calling workflow](.github/workflows/certification.yml) if needed, for exampe, `@v1` -> `v2` so that new users copy its latest version.
+5. Update the release part in the [calling workflow](.github/workflows/certification.yml) if needed, for example, `@v1` -> `v2` so that new users copy its latest version.
 
 ## Post-release actions
 

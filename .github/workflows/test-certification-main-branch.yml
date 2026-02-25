@@ -18,4 +18,4 @@ jobs:
   call:
     uses: ansible-collections/partner-certification-checker/.github/workflows/certification-reusable.yml@main
     with:
-      ansible_core_version: 'stable-2.17'
+      ansible-core-version: 'stable-2.17'

@@ -11,6 +11,12 @@ permissions:
 
 on:
   workflow_call:
+    inputs:
+      ansible_core_version:
+        description: "ansible-core version for sanity testing (e.g. stable-2.16)"
+        default: "stable-2.16"
+        required: false
+        type: string
 
 jobs:
   # Build the collection and run galaxy-importer on it
@@ -92,7 +98,7 @@ jobs:
     strategy:
       matrix:
         ansible:
-          - stable-2.16
+          - ${{ inputs.ansible_core_version }}
         python:
           - '3.6'
           - '3.7'

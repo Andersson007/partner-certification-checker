@@ -34,8 +34,8 @@ Additionally, certified collections must follow guidelines for dependency manage
 To run the certification checks against pull requests and on schedule:
 
 1. Copy the [Ansible collection certification GitHub Actions workflow](https://github.com/ansible-collections/certification/blob/main/.github/workflows/certification.yml) to the `.github/workflows` directory of your collection repository.
-1. Navigate to the `Actions` tab of the collection repository and then verify the workflow is enabled. 
-1. If Ansible Lint checks fail on files unrelated to the collection's core functionality, add an [.ansible-lint](.ansible-lint) file to your collection's root directory and list all files and directories you want Ansible Lint to ignore.
+1. Add the [.ansible-lint](.ansible-lint) file to your collection's root directory and list all files and directories you want Ansible Lint to ignore to avoid failures on files unrelated to the collection's core functionality. Commit and push the changes to your upstream repository on GitHub.
+1. Navigate to the `Actions` tab of the repository and then verify the workflow is enabled. 
 1. If there are sanity test failures that cannot be fixed and are [allowed to ignore](https://docs.ansible.com/projects/lint/rules/sanity/), create a [sanity ignore file](https://docs.ansible.com/projects/ansible/devel/dev_guide/testing/sanity/ignores.html#ignore-file-location) for each affected version of ansible-core (for example, `tests/sanity/ignore-2.18.txt`) and add corresponding entries.
 
 ### Updating the test matrix

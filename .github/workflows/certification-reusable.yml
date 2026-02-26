@@ -19,6 +19,13 @@ on:
         required: false
         default: '2.16.0'
         type: string
+      python-versions:
+        description: >-
+          JSON list of Python versions to test against in the sanity matrix
+          (e.g. '["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]').
+        required: false
+        default: '["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]'
+        type: string
 
 jobs:
   # Derive stable-X.Y from the ansible-core-version input for use in the
@@ -115,14 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python:
-          - '3.6'
-          - '3.7'
-          - '3.8'
-          - '3.9'
-          - '3.10'
-          - '3.11'
-          - '3.12'
+        python: ${{ fromJSON(inputs.python-versions) }}
 
     steps:
       # Run sanity tests inside a Docker container.

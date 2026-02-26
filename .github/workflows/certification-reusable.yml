@@ -11,8 +11,31 @@ permissions:
 
 on:
   workflow_call:
+    inputs:
+      ansible-core-version:
+        description: >-
+          ansible-core version to use (e.g. 2.16.0).
+          The stable-X.Y branch is derived automatically for sanity tests.
+        required: false
+        default: '2.16.0'
+        type: string
 
 jobs:
+  # Derive stable-X.Y from the ansible-core-version input for use in the
+  # sanity matrix, since GitHub Actions expressions cannot slice strings.
+  compute-versions:
+    name: "Compute versions"
+    runs-on: ubuntu-latest
+    outputs:
+      stable-ansible: ${{ steps.compute.outputs.stable-ansible }}
+    steps:
+      - name: Derive stable-X.Y from ansible-core-version
+        id: compute
+        run: |
+          version="${{ inputs.ansible-core-version }}"
+          major_minor=$(echo "${version}" | cut -d. -f1,2)
+          echo "stable-ansible=stable-${major_minor}" >> "${GITHUB_OUTPUT}"
+
   # Build the collection and run galaxy-importer on it
   # skipping ansible-lint as it runs as a separate job
   build-import:
@@ -20,7 +43,7 @@ jobs:
     env:
       CHECK_REQUIRED_TAGS: "True"
       RUN_ANSIBLE_LINT: "False"
-      CORE_VER: "2.16.0"
+      CORE_VER: ${{ inputs.ansible-core-version }}
       GALAXY_IMPORTER_VER: "0.4.31"
     runs-on: ubuntu-latest
     steps:
@@ -62,7 +85,7 @@ jobs:
     name: "Lint production"
     runs-on: ubuntu-latest
     env:
-      CORE_VER: "2.16.0"
+      CORE_VER: ${{ inputs.ansible-core-version }}
       LINT_VER: "24.12.2"
 
     steps:
@@ -87,12 +110,11 @@ jobs:
 
   # Run sanity checks against the collection
   sanity:
-    name: Sanity (Ⓐ${{ matrix.ansible }}, Python ${{ matrix.python }})
+    needs: compute-versions
+    name: Sanity (Ⓐ${{ needs.compute-versions.outputs.stable-ansible }}, Python ${{ matrix.python }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ansible:
-          - stable-2.16
         python:
           - '3.6'
           - '3.7'
@@ -111,7 +133,7 @@ jobs:
         # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
         uses: ansible-community/ansible-test-gh-action@d3a8ec7a59694e25e210fcd44738910149537f0e  # v1.17.0
         with:
-          ansible-core-version: ${{ matrix.ansible }}
+          ansible-core-version: ${{ needs.compute-versions.outputs.stable-ansible }}
           testing-type: sanity
           target-python-version: ${{ matrix.python }}
           # Uncomment to configure a codecov token.

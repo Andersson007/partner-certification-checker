@@ -15,5 +15,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  call:
+  # Test with the default ansible-core version (currently 2.16.0)
+  call-default:
     uses: ansible-collections/partner-certification-checker/.github/workflows/certification-reusable.yml@main
+
+  # Test with ansible-core 2.17.x
+  call-2-17:
+    uses: ansible-collections/partner-certification-checker/.github/workflows/certification-reusable.yml@main
+    with:
+      ansible-core-version: '2.17.1'
+
+  # Test with ansible-core 2.18.x
+  call-2-18:
+    uses: ansible-collections/partner-certification-checker/.github/workflows/certification-reusable.yml@main
+    with:
+      ansible-core-version: '2.18.0'

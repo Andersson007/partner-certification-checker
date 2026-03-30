@@ -12,3 +12,28 @@ releases:
     - 0.1.0.yml
     - test.yml
     release_date: '2025-12-08'
+  1.0.0:
+    changes:
+      minor_changes:
+      - certification.yml, certification-reusable.yml - Add the ``ansible-core-version``
+        input to pass an ansible-core version to use for collections that support
+        higher versions than the one that runs on Automation Hub.
+      - certification.yml, certification-reusable.yml - Add the ``collection-root``
+        input to use in collections which do not reside at the root of the repository.
+      - certification.yml, certification-reusable.yml - Add the ``python-versions``
+        input to pass a JSON list of Python versions to test against in the sanity
+        matrix.
+      release_summary: 'This is the first major release of the Red Hat partner certification
+        checker.
+
+        This changelog contains all changes to the workflows in this project
+
+        that have been made after the previous release.'
+    fragments:
+    - 0-release.yaml
+    - 1.0.0.yml
+    modules:
+    - description: A custom module plugin for Ansible.
+      name: sample_module
+      namespace: ''
+    release_date: '2026-03-30'

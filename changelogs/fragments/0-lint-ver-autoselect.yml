@@ -1,0 +1,2 @@
+minor_changes:
+  - Automatically select a compatible version of ansible-lint when ansible-core-version intput is called with 2.19.0 or higher (https://github.com/ansible-collections/partner-certification-checker/pull/61).

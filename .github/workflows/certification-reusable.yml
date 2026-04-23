@@ -142,6 +142,19 @@ jobs:
           CORE_VER: ${{ inputs.ansible-core-version }}
         run: pip install ansible-core=="${CORE_VER}"
 
+      # ansible-lint 24.12.2 is incompatible with ansible-core >= 2.19
+      # because ansible.parsing.yaml.constructor was removed.
+      # Use ansible-lint >= 25.2.0 for ansible-core 2.19+.
+      - name: Determine compatible ansible-lint version based on ansible-core version
+        env:
+          CORE_VER: ${{ inputs.ansible-core-version }}
+        run: |
+          major_minor=$(echo "${CORE_VER}" | cut -d. -f1,2)
+          minor=$(echo "${major_minor}" | cut -d. -f2)
+          if [ "${minor}" -ge 19 ]; then
+            echo "LINT_VER=25.2.0" >> "${GITHUB_ENV}"
+          fi
+
       - name: Install ansible-lint
         run: pip install ansible-lint==${{ env.LINT_VER }}
 

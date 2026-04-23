@@ -4,6 +4,21 @@ Partner Certification Checker Release Notes
 
 .. contents:: Topics
 
+v1.2.0
+======
+
+Release Summary
+---------------
+
+This is a minor release of the Red Hat partner certification checker.
+This changelog contains all changes to the workflows in this project
+that have been made after the previous release.
+
+Minor Changes
+-------------
+
+- Automatically select a compatible version of ansible-lint when ansible-core-version intput is called with 2.19.0 or higher (https://github.com/ansible-collections/partner-certification-checker/pull/61).
+
 v1.1.0
 ======
 

@@ -10,6 +10,13 @@ When updating versions of tools in the reusable workflow, ensure that the change
 
 For example, when bumping the `ansible-core` version from `2.16` to `2.17`, create a corresponding changelog fragment. It should note that, because workflow version N runs the `ansible-test sanity` command from ansible-core 2.17, if a partner has a `tests/sanity/ignore-2.16.txt` file, they need to copy it to `tests/sanity/ignore-2.17.txt` to prevent errors.
 
+## Immutable releases
+
+This repository uses [GitHub Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) to protect supply chain integrity.
+Once a GitHub Release is published, its tag cannot be moved or deleted.
+
+Enable **Immutable releases** in the repository settings under **Settings > Code security > Immutable releases** (this only needs to be done once).
+
 ## Release process
 
 1. Based on the [Semantic Versioning](https://semver.org/) conventions and [changelog/fragments](changelog/fragments), determine a proper release version number.
@@ -17,13 +24,28 @@ For example, when bumping the `ansible-core` version from `2.16` to `2.17`, crea
    - When we change any versions of tools, their arguments or anything else that might result in failures on partners' side, we release a major version.
    - If this is the case, make sure there's a corresponding changelog entry containing a porting guide as explained in the [Changelog](#changelog) section.
 2. Follow the [Releasing guidelines](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_release_without_branches.html) where applicable (for example, we don't publish this collection on Galaxy).
-3. When releasing a major release, besides a tag for the release `X.y.z`, also create a corresponding tag `vX` that will always point to the latest release of this major release. For example, if you released version `1.0.0`, create tag `v1` that will point to the same commit as tag `v1.0.0`.
-4. When releasing a minor or patch release `x.Y.Z`, move a corresponding `vX` tag to point to it. For example, when releasing version `1.1.0`, move tag `v1` to point to the same commit as `v1.1.0`.
+3. Create an annotated tag and push it:
+   ```bash
+   git tag -a vX.Y.Z -m "Release vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+4. Create a **GitHub Release** from that tag. The release becomes immutable once published.
+5. For v1.x releases only, update the floating `v1` tag to point to the new release:
+   ```bash
+   git tag -f v1 vX.Y.Z
+   git push upstream -f v1
+   ```
+6. Update the version reference in the [calling workflow](.github/workflows/certification.yml) to `@vX.Y.Z` and open a PR.
 
-   1. Get the commit SHA for the tag: `git rev-parse v1.1.0`
-   2. Move the existing local `v1` tag to the new commit SHA: `git tag -f v1 <commit-sha-of-v1.1.0>`
-   3. Force push the tag to GitHub: `git push upstream -f v1`
-5. Update the release part in the [calling workflow](.github/workflows/certification.yml) if needed, for example, `@v1` -> `v2` so that new users copy its latest version.
+### Floating tag transition plan
+
+The `v1` floating tag is kept for backwards compatibility with users who referenced `@v1` in their workflows.
+
+When `v2.0.0` is released:
+
+- Freeze the `v1` tag at its last v1.x release (stop updating it).
+- **Do NOT create a floating `v2` tag.** All v2+ users must use exact version pins only.
+- Exact version pins combined with immutable releases ensure that a published release cannot be tampered with. Users can use [Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot) to receive automatic pull requests when new versions are released.
 
 ## Post-release actions
 

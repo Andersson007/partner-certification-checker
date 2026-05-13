@@ -29,7 +29,7 @@ Enable **Immutable releases** in the repository settings under **Settings > Code
    git tag -a vX.Y.Z -m "Release vX.Y.Z"
    git push origin vX.Y.Z
    ```
-4. Create a **GitHub Release** from that tag. The release becomes immutable once published.
+4. Create a **GitHub Release** from that tag. The release is immutable when published.
 5. For v1.x releases only, update the floating `v1` tag to point to the new release.
    ```bash
    git tag -f v1 vX.Y.Z

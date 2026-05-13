@@ -1,0 +1,99 @@
+---
+name: Check changelog fragment
+
+"on":
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-changelog:
+    runs-on: ubuntu-latest
+    name: Requires changelog fragment
+    if: >-
+      !contains(github.event.pull_request.labels.*.name, 'skip-changelog')
+      && github.actor != 'dependabot[bot]'
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check for changelog fragment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          fragments=$(
+            gh api --paginate \
+              "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files" \
+              --jq '.[].filename' \
+            | grep -E '^changelogs/fragments/.+\.ya?ml$' \
+            | grep -v '\.keep$' \
+            || true
+          )
+
+          if [[ -z "${fragments}" ]]; then
+            echo "::error::No changelog fragment found."
+            echo ""
+            echo "Add a YAML file to changelogs/fragments/, e.g.:"
+            echo "  changelogs/fragments/${PR_NUMBER}-short-description.yaml"
+            echo ""
+            echo "Valid sections: major_changes, minor_changes, breaking_changes,"
+            echo "  deprecated_features, removed_features, security_fixes, bugfixes,"
+            echo "  known_issues, release_summary, trivial"
+            echo ""
+            echo "To skip, add the 'skip-changelog' label to this PR."
+            exit 1
+          fi
+
+          echo "Found changelog fragment(s):"
+          echo "${fragments}"
+
+      - name: Validate changelog fragments
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          fragments=$(
+            gh api --paginate \
+              "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files" \
+              --jq '.[].filename' \
+            | grep -E '^changelogs/fragments/.+\.ya?ml$' \
+            | grep -v '\.keep$'
+          )
+
+          exit_code=0
+          for f in ${fragments}; do
+            python3 -c "
+          import sys, yaml
+          VALID = {
+              'major_changes', 'minor_changes', 'breaking_changes',
+              'deprecated_features', 'removed_features', 'security_fixes',
+              'bugfixes', 'known_issues', 'release_summary', 'trivial',
+          }
+          path = sys.argv[1]
+          with open(path) as fh:
+              data = yaml.safe_load(fh)
+          if not isinstance(data, dict):
+              print(f'::error file={path}::Fragment must be a YAML mapping')
+              sys.exit(1)
+          bad = set(data) - VALID
+          if bad:
+              print(f'::error file={path}::Invalid section(s): {bad}')
+              sys.exit(1)
+          for k, v in data.items():
+              if k == 'release_summary':
+                  if not isinstance(v, str):
+                      print(f'::error file={path}::release_summary must be a string')
+                      sys.exit(1)
+              elif not isinstance(v, list):
+                  print(f'::error file={path}::{k} must be a list')
+                  sys.exit(1)
+          print(f'{path}: OK')
+          " "${f}" || exit_code=1
+          done
+          exit ${exit_code}

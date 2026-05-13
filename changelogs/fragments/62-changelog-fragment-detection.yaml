@@ -1,0 +1,4 @@
+minor_changes:
+  - "Added a GitHub Actions workflow to check for changelog fragment presence
+    in pull requests
+    (https://github.com/ansible-collections/partner-certification-checker/issues/62)."

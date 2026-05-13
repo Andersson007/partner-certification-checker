@@ -13,7 +13,7 @@ For example, when bumping the `ansible-core` version from `2.16` to `2.17`, crea
 ## Immutable releases
 
 This repository uses [GitHub Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) to protect supply chain integrity.
-Once a GitHub Release is published, its tag cannot be moved or deleted.
+When a release is published, that release tag cannot be moved or deleted.
 
 Enable **Immutable releases** in the repository settings under **Settings > Code security > Immutable releases** (this only needs to be done once).
 

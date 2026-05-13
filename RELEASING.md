@@ -24,7 +24,7 @@ Enable **Immutable releases** in the repository settings under **Settings > Code
    - When we change any versions of tools, their arguments or anything else that might result in failures on partners' side, we release a major version.
    - If this is the case, make sure there's a corresponding changelog entry containing a porting guide as explained in the [Changelog](#changelog) section.
 2. Follow the [Releasing guidelines](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_release_without_branches.html) where applicable (for example, we don't publish this collection on Galaxy).
-3. Create an annotated tag and push it:
+3. Create an annotated tag and push it.
    ```bash
    git tag -a vX.Y.Z -m "Release vX.Y.Z"
    git push origin vX.Y.Z

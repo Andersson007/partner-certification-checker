@@ -43,7 +43,7 @@ The `v1` floating tag is kept for backwards compatibility with users who referen
 
 When `v2.0.0` is released:
 
-- Freeze the `v1` tag at its last v1.x release (stop updating it).
+- Freeze the `v1` tag at its last v1.x release so that it can no longer be updated.
 - **Do NOT create a floating `v2` tag.** All v2+ users must use exact version pins only.
 - Exact version pins combined with immutable releases ensure that a published release cannot be tampered with. Users can use [Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot) to receive automatic pull requests when new versions are released.
 

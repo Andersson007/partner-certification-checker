@@ -30,6 +30,7 @@ To run the certification checks against pull requests and on schedule:
 This prevents Ansible Lint rule violations in those files and folders.
 1. Commit and push the changes to your repository.
 1. Navigate to the `Actions` tab of your repository and verify that the workflow is enabled.
+1. (Optional but recommended) Add a [.github/dependabot.yml](https://github.com/ansible-collections/partner-certification-checker/blob/main/.github/dependabot.yml) configuration file to your repository. When a new version of the certification workflow is released, Dependabot automatically opens a pull request to update your repository. For more information about Dependabot, see the [official documentation](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide).
 
 ### Ignoring sanity failures
 

@@ -1,9 +1,12 @@
 ---
-# This workflow calls the latest version of the
-# reusable workflow.
-# You can copy this file into your respository if
-# you want to check against pinned versions of
-# Automation Hub tests.
+# This workflow calls a pinned version of the
+# reusable workflow. Copy this file into your
+# repository to check against pinned versions
+# of Automation Hub tests.
+# The version is pinned to an exact release tag
+# (e.g. @v1.2.0) for supply chain security.
+# Use Dependabot to receive automatic PRs when
+# new versions are released.
 name: Run collection certification checks
 
 permissions:

@@ -1,0 +1,60 @@
+---
+name: Check changelog fragment
+
+"on":
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-changelog:
+    runs-on: ubuntu-latest
+    name: Requires changelog fragment
+    if: >-
+      !contains(github.event.pull_request.labels.*.name, 'skip-changelog')
+      && github.actor != 'dependabot[bot]'
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check for changelog fragment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          fragments=$(
+            gh api --paginate \
+              "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files" \
+              --jq '.[].filename' \
+            | grep -E '^changelogs/fragments/.+\.ya?ml$' \
+            | grep -v '\.keep$' \
+            || true
+          )
+
+          if [[ -z "${fragments}" ]]; then
+            echo "::error::No changelog fragment found."
+            echo ""
+            echo "Add a YAML file to changelogs/fragments/, e.g.:"
+            echo "  changelogs/fragments/${PR_NUMBER}-short-description.yaml"
+            echo ""
+            echo "Valid sections: major_changes, minor_changes, breaking_changes,"
+            echo "  deprecated_features, removed_features, security_fixes, bugfixes,"
+            echo "  known_issues, release_summary, trivial"
+            echo ""
+            echo "To skip, add the 'skip-changelog' label to this PR."
+            exit 1
+          fi
+
+          echo "Found changelog fragment(s):"
+          echo "${fragments}"
+
+      - name: Install antsibull-changelog
+        run: pip install antsibull-changelog
+
+      - name: Validate changelog fragments
+        run: antsibull-changelog lint

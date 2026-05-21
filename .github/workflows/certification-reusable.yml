@@ -74,7 +74,7 @@ jobs:
       CHECK_REQUIRED_TAGS: "True"
       RUN_ANSIBLE_LINT: "False"
       CORE_VER: ${{ inputs.ansible-core-version }}
-      GALAXY_IMPORTER_VER: "0.4.39"
+      GALAXY_IMPORTER_VER: "0.4.31"
       COLLECTION_ROOT: ${{ inputs.collection-root }}
     runs-on: ubuntu-latest
     steps:
@@ -124,7 +124,7 @@ jobs:
     name: "Lint production"
     runs-on: ubuntu-latest
     env:
-      LINT_VER: "26.4.0"
+      LINT_VER: "24.12.2"
       COLLECTION_ROOT: ${{ inputs.collection-root }}
     steps:
       - name: Check out code

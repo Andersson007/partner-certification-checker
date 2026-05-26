@@ -1,0 +1,2 @@
+breaking_changes:
+  - certification-reusable.yml - remove --skip-list sanity argument from ansible-lint job not to skip ignore.txt files validation to check that entries in those ignore files are allowed.

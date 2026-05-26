@@ -175,7 +175,7 @@ jobs:
             echo "Changing directory based on collection root ${COLLECTION_ROOT}"
             cd "${COLLECTION_ROOT}"
           fi
-          ansible-lint --profile=production --skip-list sanity
+          ansible-lint --profile=production
 
   # Run sanity checks against the collection
   sanity:

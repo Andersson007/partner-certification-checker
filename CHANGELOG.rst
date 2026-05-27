@@ -4,6 +4,28 @@ Partner Certification Checker Release Notes
 
 .. contents:: Topics
 
+v2.0.0
+======
+
+Release Summary
+---------------
+
+This is a major release of the Red Hat partner certification checker.
+This changelog contains all changes to the workflows in this project
+that have been made after the previous release.
+
+Minor Changes
+-------------
+
+- Added a GitHub Actions workflow to check for changelog fragment presence in pull requests (https://github.com/ansible-collections/partner-certification-checker/issues/62).
+- Recommended using Dependabot in README.md for timely reusable workflow updates (https://github.com/ansible-collections/partner-certification-checker/pull/73).
+- Switched to immutable releases (https://github.com/ansible-collections/partner-certification-checker/pull/74).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- certification-reusable.yml - remove --skip-list sanity argument from ansible-lint job not to skip ignore.txt files validation to check that entries in those ignore files are allowed.
+
 v1.2.0
 ======
 

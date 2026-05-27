@@ -14,6 +14,7 @@ For example, when bumping the `ansible-core` version from `2.16` to `2.17`, crea
 
 This repository uses [GitHub Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) to protect supply chain integrity.
 When a release is published, that release tag cannot be moved or deleted.
+This also means that we do not use floating tags (v2, v3, etc.) that always point to the latest minor or patch release since v2.0.0. Tag v1 is kept for backwards compatibility reasons and is also immutable.
 
 Enable **Immutable releases** in the repository settings under **Settings > Code security > Immutable releases**. You need to do this one time only.
 
@@ -30,25 +31,9 @@ Enable **Immutable releases** in the repository settings under **Settings > Code
    git push origin vX.Y.Z
    ```
 4. Create a **GitHub Release** from that tag. The release is immutable when published.
-5. For v1.x releases only, update the floating `v1` tag to point to the new release.
-   ```bash
-   git tag -f v1 vX.Y.Z
-   git push upstream -f v1
-   ```
-6. Update the version reference in the [calling workflow](.github/workflows/certification.yml) to `@vX.Y.Z` and open a PR.
-
-### Floating tag transition plan
-
-The `v1` floating tag is kept for backwards compatibility with users who referenced `@v1` in their workflows.
-
-When `v2.0.0` is released:
-
-- Freeze the `v1` tag at its last v1.x release so that it can no longer be updated.
-- **Do NOT create a floating `v2` tag.** All v2+ users must use exact version pins only.
-- Exact version pins combined with immutable releases ensure that a published release cannot be tampered with. Users can use [Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot) to receive automatic pull requests when new versions are released.
+5. Update the version reference in the [calling workflow](.github/workflows/certification.yml) to `@vX.Y.Z` and open a PR.
 
 ## Post-release actions
 
-TBD when defined
-
-If there are any breaking changes in a particular release, make sure that notifications to partners to update the workflow version in their repos mention the changes and contain a link to a porting guide (related changelog entry) as explained in the [Changelog](#changelog) section.
+- If there are any breaking changes in a particular release, notify partners to update the workflow version in their repository, including a description of changes and a link to a porting guide (i.e. the related changelog entry) as explained in the [Changelog](#changelog) section.
+- Announce the release on the Ansible forum by creating a topic under the `News & Announcements` category with the `red-hat-partner` and `certification` tags. See the [first announcement](https://forum.ansible.com/t/release-announcement-partner-certification-checker-github-workflow-v2-0-0-has-been-released/45850) as an example.

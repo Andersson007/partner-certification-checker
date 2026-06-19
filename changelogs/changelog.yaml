@@ -89,3 +89,45 @@ releases:
     - 74-immutable-releases.yaml
     - skip-sanity.yml
     release_date: '2026-05-27'
+  3.0.0:
+    changes:
+      breaking_changes:
+      - certification-reusable.yml - The ``python-versions`` input has been removed.
+        Sanity tests now run against a fixed matrix of ansible-core stable branches
+        and ``ansible-test`` automatically selects all supported Python target versions.
+      - certification-reusable.yml - The sanity test matrix is now hard-coded to ``stable-2.16``,
+        ``stable-2.18``, and ``stable-2.20`` instead of deriving a single version
+        from the ``ansible-core-version`` input. Every call to the reusable workflow
+        now runs sanity tests against all three ansible-core versions.
+      - certification-static.yml - The sanity test matrix has been updated to ``stable-2.16``,
+        ``stable-2.18``, and ``stable-2.20``. ``stable-2.17`` and ``milestone`` have
+        been removed.
+      minor_changes:
+      - certification-reusable.yml - Added the ``origin-python-version`` input (default
+        ``"3.12"``) to set the runner environment Python version. This aligns with
+        downstream Execution Environments that use Python 3.12.
+      - certification-reusable.yml - Removed the ``compute-versions`` job as it is
+        no longer needed with the hard-coded sanity matrix.
+      - certification-reusable.yml - The ``stable-2.20`` entry in the sanity matrix
+        is now annotated as Technology Preview.
+      - certification-static.yml - Added ``origin-python-version`` to the sanity test
+        step.
+      - certification-static.yml - Added ``stable-2.16`` to the sanity test matrix
+        to match the default ansible-core version used by the reusable workflow.
+      - certification-static.yml - Removed ``-x sanity`` from the ``ansible-lint``
+        command so sanity rules are no longer skipped.
+      - certification-static.yml - The ``stable-2.20`` entry in the sanity matrix
+        is now annotated as Technology Preview.
+      - meta/runtime.yml - The minimum required Ansible version has been bumped from
+        ``>=2.15.0`` to ``>=2.16.0``.
+      release_summary: 'This is a major release of the Red Hat partner certification
+        checker.
+
+        This changelog contains all changes to the workflows in this project
+
+        that have been made after the previous release.'
+    fragments:
+    - align-downstream-defaults.yml
+    - bump.yml
+    - release.yml
+    release_date: '2026-06-19'

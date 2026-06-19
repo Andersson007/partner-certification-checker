@@ -39,3 +39,4 @@ Enable **Immutable releases** in the repository settings under **Settings > Code
 
 - If there are any breaking changes in a particular release, notify partners to update the workflow version in their repository, including a description of changes and a link to a porting guide (i.e. the related changelog entry) as explained in the [Changelog](#changelog) section.
 - Announce the release on the Ansible forum by creating a topic under the `News & Announcements` category with the `red-hat-partner` and `certification` tags. See the [first announcement](https://forum.ansible.com/t/release-announcement-partner-certification-checker-github-workflow-v2-0-0-has-been-released/45850) as an example.
+  - Copy the announcement to the `#announce-ansible-partners` Slack channel.

@@ -1,55 +1,101 @@
-# Red Hat partner certification checker
+# Red Hat Partner Certification Checker
 
-This repository provides Red Hat partners with GitHub workflows that check collections for minimum requirements for certification on Red Hat Ansible Automation Hub (Automation Hub).
+This repository contains a reusable GitHub Actions [workflow](.github/workflows/certification.yml) to check whether an Ansible collection is ready for certification on Red Hat Ansible Automation Hub.
 
-## Purpose of certification checks
+The workflow helps Red Hat partners catch common certification issues before uploading a collection to Automation Hub. Furthermore, the workflow file calls a [reusable workflow](.github/workflows/certification-reusable.yml) that the Ansible Community and Partner Engineering team at Red Hat maintain.
 
-To upload Ansible collections to Automation Hub, Red Hat partners must satisfy certification requirements.
-Those requirements include running sanity and lint tests against collections during the Automation Hub import process.
+## What it checks
 
-In cases where those tests fail or highlight breaking issues, the collection uploads are rejected.
-This requires Red Hat partners to address the issues and resubmit their collections, which results in additional development and release cycles.
+The certification checker runs the same types of checks used during the Automation Hub import process, including:
 
-The certification checker provides Red Hat partners with the ability to assess the readiness of collections for certification.
-It is a minimal tool intended to reduce the likelihood of rejection by identifying common errors that Red Hat partners can fix before uploading to Automation Hub.
+- [Galaxy importer](https://github.com/ansible/galaxy-importer) checks
+- [Ansible Lint](https://docs.ansible.com/projects/lint/) checks
+- [Ansible sanity](https://docs.ansible.com/projects/ansible/latest/dev_guide/testing/sanity/index.html) tests
 
-> Certification checks are not a substitute for a comprehensive testing strategy.
-> You should add unit and integration tests for robust test coverage that validates the functionality and behavior of your modules, plugins, and roles.
+These checks help reduce failed imports and repeat release cycles.
 
-## Adding certification checks to your repository
+> [!IMPORTANT]
+> This checker runs the types of checks used during the Automation Hub import process.
+> The Ansible collection certification process has other [requirements](https://docs.ansible.com/projects/partner-certification-requirements/)
+> which this checker does not cover.
 
-To run the certification checks against pull requests and on schedule:
+> [!IMPORTANT]
+> This checker is not a replacement for a complete test strategy.
+> Use it alongside unit and integration tests for your modules, plugins, and roles.
 
-1. Copy the [Ansible collection certification GitHub Actions workflow](https://github.com/ansible-collections/partner-certification-checker/blob/main/.github/workflows/certification.yml) to the `.github/workflows` directory of your collection repository, for example:
-    ```bash
-    git clone git@github.com:ansible-collections/partner-certification-checker.git
-    cp partner-certification-checker/.github/workflows/certification.yml path/to/repository/.github/workflows/
-    ```
-1. Add an [.ansible-lint](https://github.com/ansible-collections/partner-certification-checker/blob/main/.ansible-lint) configuration file to the root directory of your collection.
-1. List any files and folders that are not related to the collection's core functionality, such as `.github/`, to the `exclude_paths` option.
-This prevents Ansible Lint rule violations in those files and folders.
-1. Commit and push the changes to your repository.
-1. Navigate to the `Actions` tab of your repository and verify that the workflow is enabled.
-1. (Optional but recommended) Add a [.github/dependabot.yml](https://github.com/ansible-collections/partner-certification-checker/blob/main/.github/dependabot.yml) configuration file to your repository. When a new version of the certification workflow is released, Dependabot automatically opens a pull request to update your repository. For more information about Dependabot, see the [official documentation](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide).
+## Quick start
 
-### Ignoring sanity failures
+Add the certification workflow to your collection repository.
 
-The certification checker might report sanity test failures that cannot be fixed and should be ignored.
-In this case you should do the following:
+1. Clone this repository.
+
+1. Copy the certification workflow into your collection repository:
+
+   ```bash
+   cp partner-certification-checker/.github/workflows/certification.yml <PATH>/<TO>/<COLLECTION>.github/workflows/certification.yml
+   ```
+
+1. Commit and push the workflow:
+
+   ```bash
+   cd <PATH>/<TO>/<COLLECTION>
+   git add .github/workflows/certification.yml
+   git commit -m "Add certification workflow"
+   git push
+   ```
+
+1. Open the `Actions` tab in your collection repository and verify that the workflow is enabled.
+
+## Add Ansible Lint configuration
+
+Add an [.ansible-lint](https://github.com/ansible-collections/partner-certification-checker/blob/main/.ansible-lint) file to the root of your collection repository.
+
+Use `exclude_paths` for files and folders that are not part of the collection itself, such as `.github/`.
+
+Example:
+
+```yaml
+---
+exclude_paths:
+  - .github/
+```
+
+This prevents unrelated files from causing Ansible Lint failures.
+
+## Keep the workflow updated
+
+Optionally, add a [.github/dependabot.yml](https://github.com/ansible-collections/partner-certification-checker/blob/main/.github/dependabot.yml) configuration file so your repository receives pull requests when the certification workflow is updated.
+
+Create `.github/dependabot.yml`:
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+```
+
+For more information, see the [Dependabot documentation](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide).
+
+## Ignoring sanity failures
+
+Some sanity test failures cannot be fixed and may need to be ignored.
+
+To ignore an allowed sanity failure:
 
 1. Review the list of [currently allowed ignores](https://docs.ansible.com/projects/lint/rules/sanity/).
-1. Create a [sanity ignore file](https://docs.ansible.com/projects/ansible/devel/dev_guide/testing/sanity/ignores.html#ignore-file-location) for each affected version of ansible-core (for example, `tests/sanity/ignore-2.18.txt`).
-1. Add the corresponding entries to the sanity ignore files.
-1. Commit and push the changes to your repository.
+1. Create a [sanity ignore file](https://docs.ansible.com/projects/ansible/devel/dev_guide/testing/sanity/ignores.html#ignore-file-location) for each affected ansible-core version, for example `tests/sanity/ignore-2.18.txt`.
+1. Add the required ignore entries.
+1. Commit and push the changes.
 
 ## Tested ansible-core branches and Python versions
 
-The certification checker runs sanity tests against the following ansible-core branches, aligned with downstream Execution Environments:
+| Component                                             | Version                                     |
+| ----------------------------------------------------- | ------------------------------------------- |
+| ansible-core sanity branches                          | `stable-2.16`, `stable-2.18`, `stable-2.20` |
+| Python for `ansible-lint` and `galaxy-importer`       | `3.12`                                      |
+| Default ansible-core for build, import, and lint jobs | `2.16.0`                                    |
 
-- `stable-2.16`
-- `stable-2.18`
-- `stable-2.20`
-
-The GitHub Actions `ansible-lint` and `galaxy-importer` jobs use Python 3.12, matching downstream Execution Environments.
-
-The default ansible-core version for the build-import and lint jobs is `2.16.0`.
+The tested ansible-core branches are aligned with downstream Execution Environments.

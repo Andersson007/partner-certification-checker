@@ -4,6 +4,21 @@ Partner Certification Checker Release Notes
 
 .. contents:: Topics
 
+v4.1.0
+======
+
+Release Summary
+---------------
+
+This is a minor release of the Red Hat partner certification checker.
+This changelog contains all changes to the workflows in this project
+that have been made after the previous release.
+
+Minor Changes
+-------------
+
+- Add a ``collection-deps`` input to install collections during ``ansible-test sanity`` checks. The input corresponds to the ``test-deps`` input in ``ansible-community/ansible-test-gh-action``.
+
 v4.0.0
 ======
 

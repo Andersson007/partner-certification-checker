@@ -20,8 +20,8 @@ on:
       ansible-core-version:
         description: >-
           ansible-core version to use for build-import and lint jobs
-          (e.g. 2.16.0). Sanity tests use a fixed matrix of ansible-core
-          stable branches and are not affected by this input.
+          (e.g. 2.16.0). To control which ansible-core versions are
+          used for sanity tests, see the skip-sanity-versions input.
         required: false
         default: "2.16.0"
         type: string
@@ -56,6 +56,16 @@ on:
           for ansible-galaxy to use when installing collections.
           The 'AH_TOKEN' secret must be provided when using this input.
         default: false
+      skip-sanity-versions:
+        description: >-
+          Space-separated list of ansible-core stable branches to
+          skip in sanity tests (e.g. "stable-2.16" or
+          "stable-2.16 stable-2.18"). Use this when the collection
+          declares a requires_ansible minimum that is higher than
+          the lowest version in the sanity matrix.
+        required: false
+        default: ""
+        type: string
     secrets:
       AH_TOKEN:
         description: >-
@@ -170,17 +180,45 @@ jobs:
           fi
           ansible-lint --profile=production
 
+  # Filter the sanity matrix based on the skip-sanity-versions input.
+  compute-sanity-matrix:
+    name: "Compute sanity matrix"
+    runs-on: ubuntu-latest
+    env:
+      # Ansible Core versions aligned with Downstream Execution Environments.
+      ALL_SANITY_VERSIONS: "stable-2.16 stable-2.18 stable-2.20"
+      SKIP_VERSIONS: ${{ inputs.skip-sanity-versions }}
+    outputs:
+      matrix: ${{ steps.filter.outputs.matrix }}
+    steps:
+      - name: Filter sanity versions
+        id: filter
+        shell: python
+        run: |
+          import json, os
+
+          all_versions = os.environ["ALL_SANITY_VERSIONS"].split()
+          skip = os.environ.get("SKIP_VERSIONS", "").split()
+          filtered = [v for v in all_versions if v not in skip]
+
+          if not filtered:
+              print("::error::All sanity versions were skipped. At least one version must remain.")
+              raise SystemExit(1)
+
+          matrix = json.dumps(filtered)
+          print(f"Sanity matrix: {matrix}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"matrix={matrix}\n")
+
   # Run sanity checks against the collection
   sanity:
+    needs: compute-sanity-matrix
     name: Sanity (Ⓐ${{ matrix.ansible }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ansible:
-          # Ansible Core versions aligned with Downstream Execution Environments.
-          - stable-2.16
-          - stable-2.18
-          - stable-2.20
+        ansible: ${{ fromJSON(needs.compute-sanity-matrix.outputs.matrix) }}
 
     steps:
       - name: Configure Red Hat Ansible Automation Hub

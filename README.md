@@ -88,3 +88,12 @@ To ignore an allowed sanity failure:
 | Default ansible-core for build, import, and lint jobs | `2.16.0`                                    |
 
 The tested ansible-core branches are aligned with downstream Execution Environments.
+
+If your collection declares a `requires_ansible` minimum in `meta/runtime.yml`
+that is higher than the lowest sanity branch, use the `skip-sanity-versions`
+input to exclude unsupported versions:
+
+```yaml
+    with:
+      skip-sanity-versions: 'stable-2.16'
+```

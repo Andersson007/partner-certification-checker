@@ -41,6 +41,20 @@ jobs:
     with:
       collection-root: "tests/fixtures/collection"
 
+  # Test skipping a single sanity version
+  call-skip-sanity-2-16:
+    uses: ./.github/workflows/certification-reusable.yml
+    with:
+      ansible-core-version: '2.18.0'
+      skip-sanity-versions: 'stable-2.16'
+
+  # Test skipping multiple sanity versions
+  call-skip-sanity-2-16-2-18:
+    uses: ./.github/workflows/certification-reusable.yml
+    with:
+      ansible-core-version: '2.20.0'
+      skip-sanity-versions: 'stable-2.16 stable-2.18'
+
   # Test installation of collection dependency
   call-collection-deps:
     uses: ./.github/workflows/certification-reusable.yml

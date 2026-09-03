@@ -1,7 +1,7 @@
 minor_changes:
   - >-
-    certification-reusable.yml - Add ``skip-sanity-versions`` input to
-    exclude ansible-core stable branches from sanity tests. Collections
-    that declare a higher minimum ``requires_ansible`` can skip older
-    versions that would otherwise always fail
+    certification-reusable.yml - Auto-detect ``requires_ansible`` from
+    ``meta/runtime.yml`` and filter the sanity test matrix to skip
+    unsupported ansible-core versions. Add ``skip-sanity-versions``
+    input to override auto-detection when needed
     (https://github.com/ansible-collections/partner-certification-checker/issues/103).

@@ -41,6 +41,14 @@ jobs:
     with:
       collection-root: "tests/fixtures/collection"
 
+  # Test auto-detection of requires_ansible filtering.
+  # The fixture declares >=2.18.0 so stable-2.16 should be skipped.
+  call-auto-detect-min-218:
+    uses: ./.github/workflows/certification-reusable.yml # zizmor: ignore[self-repository]
+    with:
+      ansible-core-version: '2.18.0'
+      collection-root: "tests/fixtures/collection_min_218"
+
   # Test skipping a single sanity version
   call-skip-sanity-2-16:
     uses: ./.github/workflows/certification-reusable.yml # zizmor: ignore[self-repository]

@@ -90,8 +90,10 @@ To ignore an allowed sanity failure:
 The tested ansible-core branches are aligned with downstream Execution Environments.
 
 If your collection declares a `requires_ansible` minimum in `meta/runtime.yml`
-that is higher than the lowest sanity branch, use the `skip-sanity-versions`
-input to exclude unsupported versions:
+that is higher than the lowest sanity branch, the workflow automatically
+detects it and skips unsupported versions from the sanity matrix.
+
+To override auto-detection, use the `skip-sanity-versions` input:
 
 ```yaml
     with:

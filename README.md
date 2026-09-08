@@ -93,9 +93,4 @@ If your collection declares a `requires_ansible` minimum in `meta/runtime.yml`
 that is higher than the lowest sanity branch, the workflow automatically
 detects it and skips unsupported versions from the sanity matrix.
 
-To override auto-detection, use the `skip-sanity-versions` input:
-
-```yaml
-    with:
-      skip-sanity-versions: 'stable-2.16'
-```
+To override auto-detection, use the [`skip-sanity-versions`](https://github.com/ansible-collections/partner-certification-checker/blob/main/.github/workflows/certification-reusable.yml#L59) input.

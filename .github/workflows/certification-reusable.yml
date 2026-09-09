@@ -239,8 +239,8 @@ jobs:
           matrix = json.dumps(filtered)
           print(f"Sanity matrix: {matrix}")
 
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write(f"matrix={matrix}\n")
+          output_path = Path(os.environ["GITHUB_OUTPUT"])
+          output_path.write_text(output_path.read_text() + f"matrix={matrix}\n")
 
   # Run sanity checks against the collection
   sanity:

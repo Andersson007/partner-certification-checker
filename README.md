@@ -93,7 +93,7 @@ The workflow automatically detects lower bounds for ansible-core in the
 `requires_ansible` key in the `meta/runtime.yml` file of your collection.
 Sanity tests for any versions of ansible-core that are not compatible with your
 lower bound are skipped when the workflow runs to prevent broken checks in CI.
-However those sanity tests will still run as part of the import process to Automation Hub.
+However those sanity tests will still run as part of the import process in Automation Hub.
 
 To override auto-detection, specify any ansible-core sanity branches that your collection does not support with the `skip-sanity-versions` input.
 You can find the list of sanity branches that the workflow runs in the [Tested ansible-core branches and Python versions](https://github.com/ansible-collections/partner-certification-checker#tested-ansible-core-branches-and-python-versions) table.

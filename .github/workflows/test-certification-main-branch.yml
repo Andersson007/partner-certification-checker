@@ -60,7 +60,7 @@ jobs:
   # ignore entries, so this job fails if Python 2.7 sanity checks still
   # run against stable-2.16.
   call-sanity-target-python-versions:
-    uses: ./.github/workflows/certification-reusable.yml
+    uses: ./.github/workflows/certification-reusable.yml # zizmor: ignore[self-repository]
     with:
       collection-root: "tests/fixtures/collection_python3_only"
       sanity-target-python-versions: '["3.10", "3.11", "3.12"]'

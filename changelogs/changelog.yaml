@@ -173,3 +173,29 @@ releases:
     - calling-workflow-bump.yml
     - collection-deps-input.yml
     release_date: '2026-08-20'
+  5.0.0:
+    changes:
+      major_changes:
+      - Set Python 3.12 as the target Python version in the sanity matrix for each
+        ansible-core stable branch. Previously, sanity tests ran against all Python
+        versions supported by each ansible-core version. This change aligns the checker
+        with downstream Execution Environments, which only ship Python 3.12.
+      minor_changes:
+      - certification-reusable.yml - Auto-detect ``requires_ansible`` from ``meta/runtime.yml``
+        and filter the sanity test matrix to skip unsupported ansible-core versions.
+        Add ``skip-sanity-versions`` input to override auto-detection when needed
+        (https://github.com/ansible-collections/partner-certification-checker/issues/103).
+      release_summary: 'This is a major release of the Red Hat partner certification
+        checker.
+
+        This changelog contains all changes to the workflows in this project
+
+        that have been made after the previous release.'
+    fragments:
+    - 5.0.0.yml
+    - adapt-agents-docs.yml
+    - bump-v410.yml
+    - sanity-matrix-target-python-version.yml
+    - skip-sanity-versions.yml
+    - zizmor-1.yml
+    release_date: '2026-09-11'

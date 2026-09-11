@@ -201,7 +201,8 @@ jobs:
         with:
           persist-credentials: false
           sparse-checkout: |
-            ${{ inputs.collection-root == '.' && 'meta/runtime.yml' || format('{0}/meta/runtime.yml', inputs.collection-root) }}
+            ${{ inputs.collection-root == '.' && 'meta/runtime.yml' ||
+            format('{0}/meta/runtime.yml', inputs.collection-root) }}
           sparse-checkout-cone-mode: false
 
       - name: Filter sanity versions

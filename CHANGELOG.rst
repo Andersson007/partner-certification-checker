@@ -4,6 +4,26 @@ Partner Certification Checker Release Notes
 
 .. contents:: Topics
 
+v5.0.0
+======
+
+Release Summary
+---------------
+
+This is a major release of the Red Hat partner certification checker.
+This changelog contains all changes to the workflows in this project
+that have been made after the previous release.
+
+Major Changes
+-------------
+
+- Set Python 3.12 as the target Python version in the sanity matrix for each ansible-core stable branch. Previously, sanity tests ran against all Python versions supported by each ansible-core version. This change aligns the checker with downstream Execution Environments, which only ship Python 3.12.
+
+Minor Changes
+-------------
+
+- certification-reusable.yml - Auto-detect ``requires_ansible`` from ``meta/runtime.yml`` and filter the sanity test matrix to skip unsupported ansible-core versions. Add ``skip-sanity-versions`` input to override auto-detection when needed (https://github.com/ansible-collections/partner-certification-checker/issues/103).
+
 v4.1.0
 ======
 

@@ -85,7 +85,7 @@ To ignore an allowed sanity failure:
 | ----------------------------------------------------- | ------------------------------------------- |
 | ansible-core sanity branches                          | `stable-2.16`, `stable-2.18`, `stable-2.20` |
 | Python for `ansible-lint` and `galaxy-importer`       | `3.12`                                      |
-| Default ansible-core for build, import, and lint jobs | `2.16.0`                                    |
+| Default ansible-core for build, import, and lint jobs | `2.16.19`                                   |
 
 The tested ansible-core branches are aligned with downstream Execution Environments.
 

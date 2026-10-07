@@ -1,0 +1,2 @@
+trivial:
+  - Add .claude -> .agents symlink for skills autodiscovery by Claude Code.

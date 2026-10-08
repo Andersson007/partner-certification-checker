@@ -4,6 +4,23 @@ Partner Certification Checker Release Notes
 
 .. contents:: Topics
 
+v6.0.0
+======
+
+Release Summary
+---------------
+
+This is a major release of the Red Hat partner certification checker.
+This changelog contains all changes to the workflows in this project
+that have been made after the previous release.
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Bumped ansible-lint from 24.12.2 to 26.4.0. This major version upgrade may flag new lint violations in partner collections that previously passed.
+- Bumped galaxy-importer from 0.4.31 to 0.4.39.
+- The default ``ansible-core-version`` input changed from 2.16.0 to 2.16.19 to satisfy the ansible-lint 26.4.0 dependency requirement (``ansible-core>=2.16.14``).
+
 v5.0.0
 ======
 
